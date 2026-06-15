@@ -1,0 +1,105 @@
+eval:
+  logging:
+    output_dir: ./logs
+    episode_name: 1
+    save_jsonl: true
+    save_summary: true
+    overwrite: true
+
+eval_test:
+  episodes: 100
+  max_steps_per_episode: 200
+  seed: 3
+
+train:
+  logging:
+    output_dir: ./logs
+    episode_name: train
+    save_jsonl: true
+    save_summary: true
+    overwrite: true
+  episodes: 100
+  max_steps_per_episode: 200
+  save_every_episodes: 100
+  save_dir: ./checkpoints
+  save_prefix: policy
+  algorithm: ppo
+  device: cpu
+  action_dim: 4
+  seed: 0
+  overwrite_logs: true
+  save_snapshot: true
+  rl_action_limit: 30.0
+  target_x_min: -0.5
+  target_x_max: 0.5
+  target_y: 17.5
+  target_z: 0.0
+  agent_config:
+    hidden_size: 128
+    gamma: 0.995
+    lam: 0.97
+    clip_eps: 0.2
+    value_loss_coef: 1.0
+    clip_vf_eps: null
+    max_grad_norm: 0.5
+    target_kl: 0.01
+    entropy_coef: 0.005
+    lr_actor: 0.0001
+    lr_critic: 0.0003
+    update_epochs: 4
+    batch_size: 64
+
+env:
+  dt: 0.01
+  max_steps: 2000
+  target_pos: [0.5, 18.0, 0.0]
+  aero_weight_path: "/Users/x/workspace/GuidedM-RL/refactor/guided_rl/env/physics/model.pth"
+  device: cpu
+  dynamics:
+    mass: 0.2
+    gravity: 9.81
+    v_ref: 18.0
+    inertia_diag: [0.02, 0.02, 0.02]
+  initial_state:
+    pos: [0.0, 0.0, 0.0]
+    #vel: [11.638097763061523, -0.01700213924050331, 9.904071807861328]
+    vel: [0.0, 10.0, 10.0]
+    omega: [0.0, 0.0, 0.0]
+    quat: None
+  camera:
+    fx: 1.0
+    fy: 1.0
+    cx: 0.0
+    cy: 0.0
+    vis_depth_min: 0.1
+    vis_hfov_deg: 120.0
+    vis_vfov_deg: 90.0
+    depth_proj_min: 0.1
+    uv_err_clip: 20.0
+  reward:
+    target_weight: 1.0
+    distance_weight: 0.1
+    alive_reward: 0.0
+  termination:
+    target_distance_threshold: 0.15
+    min_altitude: -100.0
+    max_time: null
+  action_clip: 30.0
+  base_action_maker:
+    dt: 0.01
+    fx: 1.0
+    fy: 1.0
+    servo_limit: 30.0
+  rl_action_maker:
+    use_rl: true
+    model_path: "./checkpoints/policy_4000"
+    algorithm: ppo
+    device: cpu
+    deterministic: false
+    agent_config: {}
+    obs_dim: null
+    action_dim: null
+    step_dt: 0.01
+    update_interval_steps: 5
+  action_integrator:
+    servo_limit_abs: 45.0
